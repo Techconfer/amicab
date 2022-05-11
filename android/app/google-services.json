@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "398713415523",
+    "project_id": "aim-prov",
+    "storage_bucket": "aim-prov.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398713415523:android:bca47c35a3448d05ca5556",
+        "android_client_info": {
+          "package_name": "com.app.aim_cab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398713415523-geo6qkplsdot26jf9a61ksk3lsbagiqj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.aim_cab",
+            "certificate_hash": "540d5ee974d88e3e8687a1e7693b561c48df273f"
+          }
+        },
+        {
+          "client_id": "398713415523-mdomdprcaldecupq1bbrsgbckqhbice4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIiXDS3gYHUpeiWuIignZgUVwreh0MMXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "398713415523-mdomdprcaldecupq1bbrsgbckqhbice4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
