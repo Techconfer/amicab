@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
             width: size.width,
           ),
           Image.asset(
-            "assets/images/logo.png",
+            "assets/images/aimlogo.jpeg",
             height: 150,
             width: 150,
           ),

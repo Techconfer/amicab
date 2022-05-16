@@ -90,7 +90,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                         children: [
                           Container(
                             height: 100,
-                            child: Image.asset("assets/images/login_logo.png"),
+                            child: Image.asset("assets/images/aimlogo.jpeg"),
                           ),
                         ],
                       ),

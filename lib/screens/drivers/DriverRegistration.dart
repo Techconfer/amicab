@@ -89,7 +89,7 @@ class _DriverRegistrationState extends State<DriverRegistration> {
                     children: [
                       Container(
                         height: 100,
-                          child: Image.asset("assets/images/login_logo.png")),
+                          child: Image.asset("assets/images/aimlogo.jpeg")),
                       Text("SIGN UP",style: GoogleFonts.poppins(fontSize: 25,color:Colors.black),),
                   SizedBox(height:20),
                       Neumorphic(

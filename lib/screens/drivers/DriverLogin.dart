@@ -41,7 +41,7 @@ class _DriverLoginState extends State<DriverLogin> {
             Container(
             margin: EdgeInsets.only(top: 100),
           height: 100,
-          child: Image.asset("assets/images/login_logo.png")),
+          child: Image.asset("assets/images/aimlogo.jpeg")),
         Text("LOGIN",style: GoogleFonts.poppins(fontSize: 25,color:Colors.black),),
         SizedBox(height:10),
                   Container(
