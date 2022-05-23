@@ -664,7 +664,7 @@ maxLength: 4,
                             final DateFormat formatter = DateFormat(
                                 'yyyy-MM-dd');
                             var dio = Dio();
-                            dio.options.baseUrl = "http://aim.inawebtech.com//v1.0/";
+                            dio.options.baseUrl = "http://api.cabandcargo.com//v1.0/";
 
                             ApiService service = ApiService.create();
                             Response response;

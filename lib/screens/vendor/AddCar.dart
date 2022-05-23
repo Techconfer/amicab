@@ -37,7 +37,7 @@ void callSubmitApi() async {
   });
   //for multipartrequest
   var token=await getToken();
-  var request = http.MultipartRequest('POST', Uri.parse('http://aim.inawebtech.com/v1.0/add-cars'));
+  var request = http.MultipartRequest('POST', Uri.parse('http://api.cabandcargo.com/v1.0/add-cars'));
 
   //for token
   request.headers.addAll({

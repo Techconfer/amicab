@@ -49,7 +49,7 @@ class _DriverFindVehicleShowDetailsState extends State<DriverFindVehicleShowDeta
 
     var dio = Dio();
     var response = await dio.get(
-      'http://aim.inawebtech.com/v1.0/get-transportor-cars/${widget.sId}',
+      'http://api.cabandcargo.com/v1.0/get-transportor-cars/${widget.sId}',
       options: Options(
         headers: {
           "Authorization":token
@@ -83,7 +83,7 @@ class _DriverFindVehicleShowDetailsState extends State<DriverFindVehicleShowDeta
 
     try {
       // Configure socket transports must be sepecified
-      socket = io('http://aim.inawebtech.com/socket_chat', <String, dynamic>{
+      socket = io('http://api.cabandcargo.com/socket_chat', <String, dynamic>{
         'transports': ['websocket'],
         'query': {"id": _driver.sId},
         'autoConnect': true,
@@ -156,7 +156,7 @@ class _DriverFindVehicleShowDetailsState extends State<DriverFindVehicleShowDeta
       String jsonBody = json.encode(body);
       final encoding = Encoding.getByName('utf-8');
       var response = await http.post(
-        Uri.parse("http://aim.inawebtech.com/v1.0/get-transporter-for-driver"),
+        Uri.parse("http://api.cabandcargo.com/v1.0/get-transporter-for-driver"),
         headers: headers,
         body: jsonBody,
         encoding: encoding,

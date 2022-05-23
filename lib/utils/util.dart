@@ -127,6 +127,7 @@ Future<Driverdata> getTransporter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Map json = jsonDecode(prefs.getString('transporter'));
     var user = Driverdata.fromJson(json);
+    print("transporter data : $user");
     return user;
   } catch (Exeception) {
     return null;

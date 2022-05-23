@@ -1293,7 +1293,7 @@ class _DashBoardState extends State<DashBoard> {
                                                             child: Column(
                                                               children: [
                                                                 Image.network(
-                                                                  "http://aim.inawebtech.com//" +
+                                                                  "http://api.cabandcargo.com//" +
                                                                       rideEstimate
                                                                           .data[
                                                                               index]

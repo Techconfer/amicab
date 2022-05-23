@@ -42,7 +42,7 @@ class _VendorShowVehicleRequestState extends State<VendorShowVehicleRequest> {
   void connectToServer() {
     try {
       // Configure socket transports must be sepecified
-      socket = io('http://aim.inawebtech.com/socket_chat', <String, dynamic>{
+      socket = io('http://api.cabandcargo.com/socket_chat', <String, dynamic>{
         'transports': ['websocket'],
         'query': {"id": _transporter.sId},
         'autoConnect': true,

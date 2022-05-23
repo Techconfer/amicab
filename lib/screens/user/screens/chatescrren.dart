@@ -95,7 +95,7 @@ class _ChatPageState extends State<ChatPage> {
     try {
       // Configure socket transports must be sepecified
       //ws://aim.inawebtech.com
-      socket = io('http://aim.inawebtech.com/socket_chat', <String, dynamic>{
+      socket = io('http://api.cabandcargo.com/socket_chat', <String, dynamic>{
         'transports': ['websocket'],
         'query': {"id": Varibles.SendID},
         'autoConnect': true,
@@ -142,16 +142,16 @@ class _ChatPageState extends State<ChatPage> {
     var token = await getToken();
 
     var resp = await dio.post(
-      'http://aim.inawebtech.com/v1.0/create-room',
+      'http://api.cabandcargo.com/v1.0/create-room',
       data: {
         "SenderId": Varibles.SendID,
         "ReceiverId": Varibles.ReciveID,
         "SenderName": Varibles.SenderName,
         "ReceiverName": Varibles.ReciverName,
         "SenderPhoto":
-            'http://aim.inawebtech.com/assets/profile/avatar-icon.png',
+            'http://api.cabandcargo.com/assets/profile/avatar-icon.png',
         "ReceiverPhoto":
-            'http://aim.inawebtech.com/assets/profile/avatar-icon.png',
+            'http://api.cabandcargo.com/assets/profile/avatar-icon.png',
       },
       options: Options(
         headers: {
@@ -176,7 +176,7 @@ class _ChatPageState extends State<ChatPage> {
     var token = await getToken();
 
     var resp = await dio.post(
-      'http://aim.inawebtech.com/v1.0/send-messages/' + Varibles.SendID,
+      'http://api.cabandcargo.com/v1.0/send-messages/' + Varibles.SendID,
       data: {
         "message": [
           {
@@ -186,7 +186,7 @@ class _ChatPageState extends State<ChatPage> {
             "ReceiverName": Varibles.ReciverName,
             "Message": msgtype,
             "FilePath":
-                "http://aim.inawebtech.com/assets/documents/1631451907478.jpg",
+                "http://api.cabandcargo.com/assets/documents/1631451907478.jpg",
             "MimeType": "image"
           }
         ]
@@ -361,8 +361,8 @@ class _ChatPageState extends State<ChatPage> {
                                       "ReceiverId":Varibles.ReciveID,
                                       "SenderName":"pooja sarkar",
                                       "ReceiverName":"Arjun Shah",
-                                      "SenderPhoto":"http://aim.inawebtech.com/assets/profile/avatar-icon.png",
-                                      "ReceiverPhoto":"http://aim.inawebtech.com/assets/profile/avatar-icon.png"
+                                      "SenderPhoto":"http://api.cabandcargo.com/assets/profile/avatar-icon.png",
+                                      "ReceiverPhoto":"http://api.cabandcargo.com/assets/profile/avatar-icon.png"
                                     }*/
                                     });
                                     setState(() {

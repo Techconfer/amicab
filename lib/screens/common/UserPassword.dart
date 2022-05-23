@@ -88,9 +88,9 @@ class _UserPasswordState extends State<UserPassword> {
                             onPressed: () async {
 
                             var  mainUser=await getUserType();
-                            if(mainUser=="user")
+                            if(mainUser=="transporter")
                               {
-                                var user=await getUser();
+                                var user=await getTransporter();
                                 showLoader(context);
 
                                 var dio = Dio();

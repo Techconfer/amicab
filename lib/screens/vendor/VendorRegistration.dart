@@ -126,7 +126,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                               Pattern pattern =
                                   r'^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$';
                               RegExp regex = new RegExp(pattern);
-                              if (!regex.hasMatch(value) && value.length < 5)
+                              if (!regex.hasMatch(value) && value.length > 5)
                                 return 'Enter Valid Username,should be of more then 5 character and should not contain special character';
                               else
                                 return null;
@@ -159,8 +159,12 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                         ),
                         child: Container(
                           child: TextFormField(
-                            validator: EmailValidator(
-                                errorText: 'enter a valid email address'),
+                            validator:  MultiValidator([
+                              EmailValidator(
+                                  errorText: 'Please enter valid email '),
+                              MinLengthValidator(4,
+                                  errorText: 'Please enter valid email')
+                            ]),
                             controller: emailEdit,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
@@ -259,6 +263,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                       Column(
                         children: [
                           SizedBox(height: 10),
+                          //vehicle info
                           Container(
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.only(top: 10, right: 20),
@@ -425,7 +430,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                             child: TextFormField(
                                               keyboardType: TextInputType.name,
                                               validator: (value) {
-                                                if (value == null ||
+                                                if (value.length <4 ||
                                                     value.isEmpty) {
                                                   return 'Please enter brand name';
                                                 }
@@ -463,7 +468,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                                     TextInputType.name,
                                                 validator: (value) {
                                                   if (value == null ||
-                                                      value.isEmpty) {
+                                                      value.isEmpty||value.length<3) {
                                                     return 'Please enter model';
                                                   }
                                                   return null;
@@ -525,7 +530,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                           ),
                                           SizedBox(height: 16),
                                           Text(
-                                            'Plat Number',
+                                            'Plate Number',
                                             style: GoogleFonts.raleway(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
@@ -541,9 +546,9 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
-                                                      value.isEmpty) {
-                                                    return 'Please enter plat number';
-                                                  } else if (value.length <
+                                                      value.isEmpty ) {
+                                                    return 'Please enter plate number';
+                                                  } else if (value.length !=
                                                       10) {
                                                     return 'Please enter a valid plate number';
                                                   }
@@ -644,7 +649,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                         Pattern pattern = r'^[a-z A-Z,.\-]+$';
                                         RegExp regex = new RegExp(pattern);
                                         if (!regex.hasMatch(value) &&
-                                            value.length < 5)
+                                            value.length >= 5)
                                           return 'Enter Valid Full name, minimum 5 characters';
                                         else
                                           return null;
@@ -713,10 +718,13 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       lastDate: DateTime.now(),
                                     );
                                     if (picked != null &&
-                                        picked != _selectedDate)
+                                        picked != _selectedDate && isAdult(picked.toString())>18)
+                                      print( isAdult(picked.toString())>18);
                                       setState(() {
                                         _selectedDate = picked;
                                       });
+
+                                    print(picked.toString());
                                   },
                                   child: Neumorphic(
                                     style: NeumorphicStyle(
@@ -728,9 +736,9 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       alignment: Alignment.centerLeft,
                                       margin: EdgeInsets.all(10),
                                       child: Text(
-                                        _selectedDate == null
+                                         _selectedDate==null
                                             ? "Enter dob"
-                                            : formatter.format(_selectedDate),
+                                            : isAdult(_selectedDate.toString())>18&&_selectedDate!=null?formatter.format(_selectedDate):"Minimum required Age is 18",
                                         style: TextStyle(
                                             fontSize: 15,
                                             color: HexColor(textColor)),
@@ -809,7 +817,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                           final DateFormat formatter = DateFormat('yyyy-MM-dd');
                           var dio = Dio();
                           dio.options.baseUrl =
-                              "http://aim.inawebtech.com//v1.0/";
+                              "http://api.cabandcargo.com//v1.0/";
 
                           ApiService service = ApiService.create();
                           Response response;
@@ -822,7 +830,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                 docSide2File != null &&
                                 docSide3File != null &&
                                 docSide4File != null) {
-                              if (selectedRideType != "") {
+                              if (vehicleType != "") {
                                 var formData = FormData.fromMap({
                                   "name": nameEdit.value.text.toLowerCase(),
                                   "username":
@@ -832,7 +840,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   "mobile": mobileEdit.value.text.toLowerCase(),
                                   "gender": isMale ? "Male" : "Female",
                                   "dob": formatter.format(_selectedDate),
-                                  "vehicle_type": selectedRideType,
+                                  "vehicle_type": vehicleType,
                                   "brand_name":
                                       brandNameEdit.value.text.toLowerCase(),
                                   "model": modelEdit.value.text.toLowerCase(),
@@ -855,11 +863,15 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                 response =
                                     await dio.post('/register', data: formData);
                               } else {
-                                showError(context, "Please select ride type");
+                                dissmissLoader(context);
+                                showError(context, "Please select vehicle type");
+
                               }
                             } else {
+                              dissmissLoader(context);
                               showError(
                                   context, "Please upload required documents");
+
                             }
                           } else {
                             if (docSide1File != null &&
@@ -876,7 +888,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                 "gender": isMale ? "Male" : "Female",
                                 "dob": formatter.format(_selectedDate),
                                 "login_type": "normal",
-                                "type": "driver",
+                                "type": "transportor",
                                 "own_vehicle": false,
                                 "location": "[22,22]",
                                 "driver_document": await MultipartFile.fromFile(
@@ -892,8 +904,10 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   await dio.post('/register', data: formData);
                               print(response);
                             } else {
+                              dissmissLoader(context);
                               showError(
                                   context, "Please upload required documents");
+
                             }
                           }
                           print(response.data);
@@ -902,8 +916,16 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                             DriverRegisterModal userRegistration =
                                 DriverRegisterModal.fromJson(response.data);
                             if (userRegistration.status) {
-                              showOtpVerify(
-                                  userRegistration, userRegistration.token);
+                              // showOtpVerify(
+                              //     userRegistration, userRegistration.token);//rebeka80
+                              setTransporter(
+                                  userRegistration.data.driverdata.toJson(),userRegistration.token );
+                              setvehicle(userRegistration.data.vehicleData.toJson());
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VendorDashBoard()),
+                                      (Route<dynamic> route) => false);
                             } else {
                               showError(context, userRegistration.msg);
                             }
@@ -937,6 +959,37 @@ class _VendorRegistrationState extends State<VendorRegistration> {
         ),
       ),
     );
+  }
+
+  // bool isAdult2(String birthDateString) {
+  //   String datePattern = "dd-MM-yyyy";
+  //
+  //   // Current time - at this moment
+  //   DateTime today = DateTime.now();
+  //
+  //   // Parsed date to check
+  //   DateTime birthDate = DateFormat(datePattern).parse(birthDateString);
+  //
+  //   // Date to check but moved 18 years ahead
+  //   DateTime adultDate = DateTime(
+  //     birthDate.year + 18,
+  //     birthDate.month,
+  //     birthDate.day,
+  //   );
+  //
+  //   return adultDate.isBefore(today);
+  // }
+
+  double isAdult(String enteredAge) {
+    var birthDate = DateFormat('yyyy-mm-dd').parse(enteredAge);
+    print("set state: $birthDate");
+    var today = DateTime.now();
+
+    final difference = today.difference(birthDate).inDays;
+    print(difference);
+    final year = difference / 365;
+    print(year);
+    return year;
   }
 
   void showOtpVerify(DriverRegisterModal userData, String token) {
@@ -1133,7 +1186,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "Front view",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1155,7 +1208,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(carSide1File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],
@@ -1174,7 +1227,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "back view",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1196,7 +1249,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(carSide2File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],
@@ -1215,7 +1268,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "Left view",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1237,7 +1290,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(carSide3File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],
@@ -1256,7 +1309,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "Right view",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1278,7 +1331,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(carSide4File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],
@@ -1358,7 +1411,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "Driving Licence",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1380,7 +1433,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(docSide1File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],
@@ -1399,7 +1452,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "Govt. ID proof",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1421,7 +1474,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(docSide2File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],
@@ -1440,7 +1493,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "Vehicle ID proof",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1462,7 +1515,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(docSide3File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],
@@ -1481,7 +1534,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                   width: 250,
                                   child: Center(
                                       child: Text(
-                                    "Upload",
+                                    "Address Proof",
                                     style: GoogleFonts.poppins(
                                         color: HexColor("#8B9EB0"),
                                         fontSize: 18),
@@ -1503,7 +1556,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       child: Image.file(
                                         File(docSide4File.path),
                                         height: 50,
-                                        width: 50,
+                                        width: 45,
                                         fit: BoxFit.fill,
                                       )))
                         ],

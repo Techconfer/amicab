@@ -50,7 +50,7 @@ class _VendorAccountState extends State<VendorAccount> {
     String urlis = _driver.sId;
 
     var response = await dio.get(
-      'http://aim.inawebtech.com/v1.0/user-data/' + urlis,
+      'http://api.cabandcargo.com/v1.0/user-data/' + urlis,
       options: Options(
         headers: {
           "Authorization": token // set content-length

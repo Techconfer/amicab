@@ -57,7 +57,7 @@ class _DriverPaymentState extends State<DriverPayment> {
     print("user_id_ride:"+_driver.sId);
     String urlis=_driver.sId;
 
-    var response = await dio.get('http://aim.inawebtech.com/v1.0/user-data/'+urlis,
+    var response = await dio.get('http://api.cabandcargo.com/v1.0/user-data/'+urlis,
       options: Options(
         headers: {
           "Authorization" :token// set content-length
@@ -87,7 +87,7 @@ class _DriverPaymentState extends State<DriverPayment> {
     print("user_id_ride:" + token);
 
     var resp = await dio.post(
-      'http://aim.inawebtech.com/v1.0/add-money-to-user-wallet',
+      'http://api.cabandcargo.com/v1.0/add-money-to-user-wallet',
       data: {
         "user_id": _driver.sId,
         "booking_id": _driver.sId,
@@ -122,7 +122,7 @@ class _DriverPaymentState extends State<DriverPayment> {
     var token = await getToken();
 
     var resp = await dio.post(
-      'http://aim.inawebtech.com/v1.0/add-money-to-user-wallet-success',
+      'http://api.cabandcargo.com/v1.0/add-money-to-user-wallet-success',
       data: {
         "SystemOrderId": Varibles.SystemOrderId,
         "OrderId": Varibles.id,

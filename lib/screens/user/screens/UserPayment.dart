@@ -52,7 +52,7 @@ class _UserPaymentState extends State<UserPayment> {
     Varibles.UserId = urlis;
     Varibles.Token = token;
     var response = await dio.get(
-      'http://aim.inawebtech.com/v1.0/user-data/' + urlis,
+      'http://api.cabandcargo.com/v1.0/user-data/' + urlis,
       options: Options(
         headers: {
           "Authorization": token // set content-length
@@ -78,7 +78,7 @@ class _UserPaymentState extends State<UserPayment> {
     print("user_id_ride:" + token);
 
     var resp = await dio.post(
-      'http://aim.inawebtech.com/v1.0/add-money-to-user-wallet',
+      'http://api.cabandcargo.com/v1.0/add-money-to-user-wallet',
       data: {
         "user_id": user.sId,
         "booking_id": user.sId,
@@ -113,7 +113,7 @@ class _UserPaymentState extends State<UserPayment> {
     var token = await getToken();
 
     var resp = await dio.post(
-      'http://aim.inawebtech.com/v1.0/add-money-to-user-wallet-success',
+      'http://api.cabandcargo.com/v1.0/add-money-to-user-wallet-success',
       data: {
         "SystemOrderId": Varibles.SystemOrderId,
         "OrderId": Varibles.id,

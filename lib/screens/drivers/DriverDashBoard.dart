@@ -82,7 +82,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _driver = await getDriver();
-      isVehicle = _driver.is_vehcile;
+      isVehicle = _driver.is_vehcile??false;
       getRunningRideData();
       connectToServer();
 
@@ -1067,7 +1067,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                                           'TransporterId']
                                                                       [
                                                                       'userimage']
-                                                                  : "",
+                                                                  : "http://api.cabandcargo.com/assets/profile/avatar-icon.png",
                                                               width: 60,
                                                               height: 60,
                                                             ),
@@ -2411,7 +2411,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
 
     try {
       // Configure socket transports must be sepecified
-      socket = io('http://aim.inawebtech.com/socket_chat', <String, dynamic>{
+      socket = io('http://api.cabandcargo.com/socket_chat', <String, dynamic>{
         'transports': ['websocket'],
         'query': {"id": _driver.sId},
         'autoConnect': true,

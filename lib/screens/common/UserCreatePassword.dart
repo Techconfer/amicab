@@ -228,8 +228,8 @@ class _UserCreatePasswordState extends State<UserCreatePassword> {
                             showLoader(context);
                             var mainUser = await getUserType();
                             String userId = "";
-                            if (mainUser == "user") {
-                              var user = await getUser();
+                            if (mainUser == "transporter") {
+                              var user = await getTransporter();
                               userId = user.sId;
                             }
                             else {

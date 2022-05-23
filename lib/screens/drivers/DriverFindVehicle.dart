@@ -50,7 +50,7 @@ class _DriverFindVehicleState extends State<DriverFindVehicle> {
       String jsonBody = json.encode(body);
       final encoding = Encoding.getByName('utf-8');
       var response = await http.post(
-        Uri.parse("http://aim.inawebtech.com/v1.0/get-transporter-for-driver"),
+        Uri.parse("http://api.cabandcargo.com/v1.0/get-transporter-for-driver"),
         headers: headers,
         body: jsonBody,
         encoding: encoding,

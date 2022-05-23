@@ -44,7 +44,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
     // var user=await getUser();
     var token = await getToken();
     var response = await dio.get(
-      'http://aim.inawebtech.com/v1.0/get-wallet-details?user_id=' +
+      'http://api.cabandcargo.com/v1.0/get-wallet-details?user_id=' +
           widget.sId +
           '&offset=0',
       options: Options(
@@ -73,7 +73,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
     String urlis = widget.sId;
 
     var response = await dio.get(
-      'http://aim.inawebtech.com/v1.0/user-data/' + urlis,
+      'http://api.cabandcargo.com/v1.0/user-data/' + urlis,
       options: Options(
         headers: {
           "Authorization": token // set content-length

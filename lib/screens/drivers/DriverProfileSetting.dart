@@ -320,7 +320,7 @@ class _DriverProfileSettingState extends State<DriverProfileSetting> {
                               final DateFormat formatter = DateFormat(
                                   'yyyy-MM-dd');
                               var dio = Dio();
-                              dio.options.baseUrl = "http://aim.inawebtech.com//v1.0/";
+                              dio.options.baseUrl = "http://api.cabandcargo.com//v1.0/";
                               String token=await getToken();
                               var formData = FormData.fromMap( {
                                 "name": nameEdit.value.text.toLowerCase(),
