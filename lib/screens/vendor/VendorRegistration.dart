@@ -159,7 +159,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                         ),
                         child: Container(
                           child: TextFormField(
-                            validator:  MultiValidator([
+                            validator: MultiValidator([
                               EmailValidator(
                                   errorText: 'Please enter valid email '),
                               MinLengthValidator(4,
@@ -430,7 +430,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                             child: TextFormField(
                                               keyboardType: TextInputType.name,
                                               validator: (value) {
-                                                if (value.length <4 ||
+                                                if (value.length < 4 ||
                                                     value.isEmpty) {
                                                   return 'Please enter brand name';
                                                 }
@@ -468,7 +468,8 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                                     TextInputType.name,
                                                 validator: (value) {
                                                   if (value == null ||
-                                                      value.isEmpty||value.length<3) {
+                                                      value.isEmpty ||
+                                                      value.length < 3) {
                                                     return 'Please enter model';
                                                   }
                                                   return null;
@@ -546,7 +547,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
-                                                      value.isEmpty ) {
+                                                      value.isEmpty) {
                                                     return 'Please enter plate number';
                                                   } else if (value.length !=
                                                       10) {
@@ -718,11 +719,12 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       lastDate: DateTime.now(),
                                     );
                                     if (picked != null &&
-                                        picked != _selectedDate && isAdult(picked.toString())>18)
-                                      print( isAdult(picked.toString())>18);
-                                      setState(() {
-                                        _selectedDate = picked;
-                                      });
+                                        picked != _selectedDate &&
+                                        isAdult(picked.toString()) > 18)
+                                      print(isAdult(picked.toString()) > 18);
+                                    setState(() {
+                                      _selectedDate = picked;
+                                    });
 
                                     print(picked.toString());
                                   },
@@ -736,9 +738,15 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                       alignment: Alignment.centerLeft,
                                       margin: EdgeInsets.all(10),
                                       child: Text(
-                                         _selectedDate==null
+                                        _selectedDate == null
                                             ? "Enter dob"
-                                            : isAdult(_selectedDate.toString())>18&&_selectedDate!=null?formatter.format(_selectedDate):"Minimum required Age is 18",
+                                            : isAdult(_selectedDate
+                                                            .toString()) >
+                                                        18 &&
+                                                    _selectedDate != null
+                                                ? formatter
+                                                    .format(_selectedDate)
+                                                : "Minimum required Age is 18",
                                         style: TextStyle(
                                             fontSize: 15,
                                             color: HexColor(textColor)),
@@ -811,7 +819,7 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                     FocusScope.of(context).requestFocus(FocusNode());
 
                     if (isAgree) {
-                      if (_selectedDate != null) {
+                      if (_selectedDate != null&& isAdult(_selectedDate.toString())>18) {
                         if (_formKey.currentState.validate()) {
                           showLoader(context);
                           final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -864,14 +872,13 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                                     await dio.post('/register', data: formData);
                               } else {
                                 dissmissLoader(context);
-                                showError(context, "Please select vehicle type");
-
+                                showError(
+                                    context, "Please select vehicle type");
                               }
                             } else {
                               dissmissLoader(context);
                               showError(
                                   context, "Please upload required documents");
-
                             }
                           } else {
                             if (docSide1File != null &&
@@ -907,7 +914,6 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                               dissmissLoader(context);
                               showError(
                                   context, "Please upload required documents");
-
                             }
                           }
                           print(response.data);
@@ -919,13 +925,15 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                               // showOtpVerify(
                               //     userRegistration, userRegistration.token);//rebeka80
                               setTransporter(
-                                  userRegistration.data.driverdata.toJson(),userRegistration.token );
-                              setvehicle(userRegistration.data.vehicleData.toJson());
+                                  userRegistration.data.driverdata.toJson(),
+                                  userRegistration.token);
+                              setvehicle(
+                                  userRegistration.data.vehicleData.toJson());
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => VendorDashBoard()),
-                                      (Route<dynamic> route) => false);
+                                  (Route<dynamic> route) => false);
                             } else {
                               showError(context, userRegistration.msg);
                             }
