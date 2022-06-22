@@ -439,11 +439,12 @@ class _DriverRegistrationState extends State<DriverRegistration> {
                                             child: Container(
                                               margin: EdgeInsets.all(10),
                                               child: TextFormField(
+                                                maxLength: 10,
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty ||
                                                       value.length != 10) {
-                                                    return 'Please enter plat number';
+                                                    return 'Please enter plate number';
                                                   }
                                                   return null;
                                                 },
@@ -629,10 +630,11 @@ class _DriverRegistrationState extends State<DriverRegistration> {
                                     child: TextFormField(
                                       controller: licenceEdit,
                                       validator: (value) {
-                                        Pattern pattern =
-                                            r'^(([A-Z]{2}[0-9]{2})( )|([A-Z]{2}-[0-9]{2}))((19|20)[0-9][0-9])[0-9]{7}$';
-                                        RegExp regex = new RegExp(pattern);
-                                        if (!regex.hasMatch(value))
+                                        // Pattern pattern =
+                                        //     r'^(([A-Z]{2}[0-9]{2})( )|([A-Z]{2}-[0-9]{2}))((19|20)[0-9][0-9])[0-9]{7}$';
+                                        // RegExp regex = new RegExp(pattern);
+                                        //if (!regex.hasMatch(value))
+                                        if(value.isEmpty)
                                           return 'Enter Valid license ';
                                         else
                                           return null;

@@ -5,6 +5,7 @@ import 'package:aim_cab/screens/user/api/api_service.dart';
 import 'package:aim_cab/screens/user/model/DriverRegisterModal.dart';
 import 'package:aim_cab/screens/user/screens/userTerms.dart';
 import 'package:aim_cab/screens/vendor/VendorAccount.dart';
+import 'package:aim_cab/screens/vendor/widgets/drwaerlist.dart';
 import 'package:aim_cab/utils/Constant.dart';
 import 'package:aim_cab/utils/util.dart';
 import 'package:carp_background_location/carp_background_location.dart';
@@ -37,7 +38,7 @@ class _VendorDashBoardState extends State<VendorDashBoard> {
   // List of coordinates to join
   List<LatLng> polylineCoordinates = [];
   bool offlineDriver = false;
-  dynamic newRequestData = null;
+  dynamic newRequestData;
   Socket socket;
   bool isTripStart = false;
   bool isNewRequest = false;
@@ -85,7 +86,7 @@ class _VendorDashBoardState extends State<VendorDashBoard> {
             "Authorization": token // set content-length
           },
         ));
-    print(response);
+    print("on Data response:$response");
   }
 
   void startLocation() async {
@@ -190,150 +191,10 @@ class _VendorDashBoardState extends State<VendorDashBoard> {
     GoogleMap googleMap;
     Size sizeScreen = MediaQuery.of(context).size;
     if (googleMap == null) {
-      googleMap = GoogleMap(
-        markers: Set<Marker>.from(markers),
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        initialCameraPosition: CameraPosition(
-            bearing: 192.8334901395799,
-            target: LatLng(37.43296265331129, -122.08832357078792),
-            tilt: 59.440717697143555,
-            zoom: 19.151926040649414),
-        onMapCreated: (c) {
-          mapController = c;
-          if (mounted) {
-            setState(() {
-              c.setMapStyle(_mapStyle);
-            });
-          }
-        },
-        mapType: MapType.normal,
-        compassEnabled: false,
-        padding: EdgeInsets.only(
-          top: 1.0,
-        ),
-        onCameraIdle: () {},
-        onCameraMove: ((_positionMoving) {
-//          setState(() {
-//          });
-        }),
-      );
+      googleMap = buildGoogleMap2();
     }
     return Scaffold(
-      drawer: Drawer(
-        child: SafeArea(
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(top: 50),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        margin: EdgeInsets.only(right: 20),
-                        child: Neumorphic(
-                          child: IconButton(
-                              icon: Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Column(
-                        children: [
-                          Image.network(
-                            _transporter != null ? _transporter.userimage : "",
-                            width: 100,
-                            height: 100,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            _transporter != null ? _transporter.name : "",
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: HexColor(textColor)),
-                          ),
-                          SizedBox(
-                            height: 3,
-                          ),
-                          SmoothStarRating(
-                            starCount: 5,
-                            isReadOnly: true,
-                            color: Theme.of(context).accentColor,
-                            rating: 4.5,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              DrawerListTile("Home", "assets/images/home_icon.svg", () {
-                Navigator.pop(context);
-              }),
-              DrawerListTile("Rides", "assets/images/car_icon.svg", () {}),
-              DrawerListTile("Car", "assets/images/car_icon.svg", () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CarList()),
-                );
-              }),
-              DrawerListTile("Account", "assets/images/account.svg", () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VendorAccount()),
-                );
-              }),
-              DrawerListTile("Support", "assets/images/support_icon.svg", () {
-                Navigator.pop(context);
-              }),
-              DrawerListTile("About", 'assets/images/about_icon.svg', () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserTerms("About")),
-                );
-              }),
-              DrawerListTile(
-                  "Terms & Condition", 'assets/images/terms_icon.svg', () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UserTerms("Terms & Conditions")),
-                );
-              }),
-              DrawerListTile(
-                  "Privacy Policy", 'assets/images/privacy_policy_icon.svg',
-                  () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UserTerms("Privacy Policy")),
-                );
-              }),
-              DrawerListTile("Logout", 'assets/images/sign_out_icon.svg',
-                  () async {
-                await logoutUser();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => SplashScreen()),
-                    (Route<dynamic> route) => false);
-              }),
-            ],
-          ),
-        ),
-      ),
+      drawer: VendorDashDrawer(transporter: _transporter),
       body: Container(
         child: SafeArea(
           child: Stack(
@@ -654,8 +515,7 @@ class _VendorDashBoardState extends State<VendorDashBoard> {
                                                                         .start,
                                                                 children: [
                                                                   Image.network(
-                                                                    newRequestData !=
-                                                                            null
+                                                                    newRequestData != null
                                                                         ? newRequestData[
                                                                             'image']
                                                                         : "",
@@ -924,6 +784,37 @@ class _VendorDashBoardState extends State<VendorDashBoard> {
     );
   }
 
+  GoogleMap buildGoogleMap2() {
+    return GoogleMap(
+      markers: Set<Marker>.from(markers),
+      myLocationEnabled: true,
+      myLocationButtonEnabled: true,
+      initialCameraPosition: CameraPosition(
+          bearing: 192.8334901395799,
+          target: LatLng(37.43296265331129, -122.08832357078792),
+          tilt: 59.440717697143555,
+          zoom: 19.151926040649414),
+      onMapCreated: (c) {
+        mapController = c;
+        if (mounted) {
+          setState(() {
+            c.setMapStyle(_mapStyle);
+          });
+        }
+      },
+      mapType: MapType.normal,
+      compassEnabled: false,
+      padding: EdgeInsets.only(
+        top: 1.0,
+      ),
+      onCameraIdle: () {},
+      onCameraMove: ((_positionMoving) {
+//          setState(() {
+//          });
+      }),
+    );
+  }
+
   vendorUpdate(data) async {
     newRequestData = data;
     isNewRequest = true;
@@ -931,16 +822,16 @@ class _VendorDashBoardState extends State<VendorDashBoard> {
         desiredAccuracy: geo.LocationAccuracy.low);
 
     final fetchGeocoder = await Geocoder2.getDataFromCoordinates(
-        googleMapApiKey: "GOOGLE_MAP_API_KEY",
+        googleMapApiKey: kgoogleMapKey,
         latitude: loc.latitude,
         longitude: loc.longitude);
     var daddresses = fetchGeocoder.address;
 
     final fetchGeocoderdest = await Geocoder2.getDataFromCoordinates(
-        googleMapApiKey: "GOOGLE_MAP_API_KEY",
+        googleMapApiKey: kgoogleMapKey,
         latitude: newRequestData['driver_location'][0],
         longitude: newRequestData['driver_location'][1]);
-    var daddressesdest = fetchGeocoder.address;
+    var daddressesdest = fetchGeocoderdest.address;
 
     sourceAddress = daddresses;
     destinationAddress = daddressesdest;
@@ -1128,39 +1019,6 @@ class _VendorDashBoardState extends State<VendorDashBoard> {
   }
 }
 
-class DrawerListTile extends StatelessWidget {
-  String _title;
-  String _icon;
-  Function _function;
 
-  DrawerListTile(this._title, this._icon, this._function);
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _function.call(),
-      child: Container(
-        margin: EdgeInsets.all(10),
-        child: Row(
-          children: [
-            Neumorphic(
-                style: NeumorphicStyle(color: HexColor("#E3EDF7")),
-                child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: SvgPicture.asset(
-                      _icon,
-                      height: 25,
-                      width: 25,
-                    ))),
-            SizedBox(
-              width: 20,
-            ),
-            Text(_title,
-                style: GoogleFonts.poppins(
-                    fontSize: 13, color: HexColor("#8B9EB0")))
-          ],
-        ),
-      ),
-    );
-  }
-}
+

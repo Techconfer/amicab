@@ -75,7 +75,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
     LocationManager().notificationMsg = 'CAB is tracking your location';
     locationStream = LocationManager().locationStream;
 
-    locationSubscription = locationStream.listen(onData);
+    locationSubscription = locationStream.listen(onGetLocData);
 
     rootBundle.loadString('assets/map_style.txt').then((string) {
       _mapStyle = string;
@@ -506,8 +506,8 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
   Widget build(BuildContext context) {
     GoogleMap googleMap;
     Size sizeScreen = MediaQuery.of(context).size;
-    if (googleMap == null) {
-      googleMap = GoogleMap(
+
+      googleMap ??= GoogleMap(
         myLocationEnabled: true,
         markers: Set<Marker>.from(markers),
         polylines: Set<Polyline>.of(polylines.values),
@@ -515,7 +515,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
         initialCameraPosition: CameraPosition(
             bearing: 192.8334901395799,
             target: LatLng(37.43296265331129, -122.08832357078792),
-            tilt: 59.440717697143555,
+           // tilt: 59.440717697143555,
             zoom: 19.151926040649414),
         onMapCreated: (c) {
           mapController = c;
@@ -537,7 +537,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
 //          });
         }),
       );
-    }
+
     return Scaffold(
       drawer: Drawer(
         child: SafeArea(
@@ -722,16 +722,19 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                   ),
                 ),
               ),
+              //initial screen with online status+go online buttopn and banner
               Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
                   child: SafeArea(
                       child: AnimatedOpacity(
-                    opacity: rideData == null ? 0 : 1,
+                   opacity: rideData == null ? 0 : 1,
+                         // opacity:0,
                     duration: Duration(milliseconds: 200),
                     child: Column(
                       children: [
+                        //search vehicle
                         Container(
                           margin: EdgeInsets.all(10),
                           child: ElevatedButton(
@@ -765,6 +768,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                             ),
                           ),
                         ),
+                        //go offline online
                         Container(
                           margin: EdgeInsets.all(10),
                           child: ElevatedButton(
@@ -775,7 +779,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                               var res = await api.changeOnlineStatus(
                                   _driver.sId, offlineDriver);
                               dissmissLoader(context);
-                              print('kjdisj$offlineDriver');
+                              print('driver online status:$offlineDriver');
 
                               if (res.body["status"]) {
                                 setState(() {
@@ -808,6 +812,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                             ),
                           ),
                         ),
+                        //banner
                         Container(
                           child: Column(
                             children: <Widget>[
@@ -969,6 +974,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                       ],
                     ),
                   ))),
+              //vehicleAcceptByVendor = data dependent
               Visibility(
                 visible: true,
                 child: Positioned(
@@ -985,10 +991,8 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                             GestureDetector(
                               child: Visibility(
                                 visible: isNewVehicle,
-                                child: true
-                                    ? Container(
-                                        width: true ? sizeScreen.width - 5 : 0,
-//                                  margin:EdgeInsets.only(left:20),
+                                child: Container(
+                                        width:  sizeScreen.width - 5 ,
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).primaryColor,
                                           boxShadow: [
@@ -1007,8 +1011,9 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                         ),
                                         child: Center(
                                           child: SingleChildScrollView(
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
+                                            scrollDirection: Axis.horizontal,
+                                            // physics:
+                                            //     NeverScrollableScrollPhysics(),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -1016,6 +1021,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                 SizedBox(
                                                   height: 10,
                                                 ),
+                                                //button to accept vhicle after vendor assign
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.end,
@@ -1035,6 +1041,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                           driverArrived(
                                                               vehicleAcceptByVendor[
                                                                   '_id']);
+                                                          print("vendor accepted id:$vehicleAcceptByVendor['_id']");
                                                         },
                                                         icon: Icon(
                                                           Icons.add,
@@ -1046,6 +1053,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                   alignment:
                                                       Alignment.topCenter,
                                                 ),
+                                                //ride deatils with location and user data
                                                 Container(
                                                     alignment:
                                                         Alignment.topCenter,
@@ -1080,7 +1088,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                                   ? vehicleAcceptByVendor[
                                                                           'TransporterId']
                                                                       ['name']
-                                                                  : "john doe",
+                                                                  : "john vow",
                                                               style: GoogleFonts.poppins(
                                                                   fontWeight:
                                                                       FontWeight
@@ -1099,11 +1107,11 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                                             'TransporterId']
                                                                         [
                                                                         'rating']
-                                                                    : 0,
+                                                                    : 2,
                                                                 isReadOnly:
                                                                     true,
                                                                 color: HexColor(
-                                                                    "#0A66C2"),
+                                                                    "#C20A26"),
                                                                 rating: 3.5)
                                                           ],
                                                         ),
@@ -1201,12 +1209,15 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                           ],
                                                         )
                                                       ],
-                                                    )),
+                                                    ),
+                                                ),
                                                 Center(
                                                   child: Container(
                                                     margin: EdgeInsets.all(20),
                                                     alignment: Alignment.center,
                                                     child: hadVendorAccepted
+                                                    //if vehicleAcceptByVendor = data is not null
+                                                    //accept button is not there
                                                         ? Container(
                                                             alignment: Alignment
                                                                 .topRight,
@@ -1285,6 +1296,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                                     child: Text(
                                                                         "Cancel")),
                                                           )
+                                                    //if vehicleAcceptByVendor has no data
                                                         : ButtonBar(
                                                             alignment:
                                                                 MainAxisAlignment
@@ -1298,7 +1310,9 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                                             .white,
                                                                     primary:
                                                                         HexColor(
-                                                                            "BC0000"),
+                                                                            // "BC0000"
+                                                                            "#9D00BC"
+                                                                        ),
                                                                     minimumSize:
                                                                         Size(88,
                                                                             36),
@@ -1321,7 +1335,8 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                                     });
                                                                   },
                                                                   child: Text(
-                                                                      "Reject")),
+                                                                      "Reject"),
+                                                              ),
                                                               SizedBox(
                                                                 width: 30,
                                                               ),
@@ -1407,7 +1422,6 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                             ),
                                           ),
                                         ))
-                                    : Container(),
                               ),
                             ),
                           ],
@@ -1415,6 +1429,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                       ),
                     ))),
               ),
+              //driver with vheicle booking
               Visibility(
                 visible: isNewBooking,
                 child: Positioned(
@@ -1533,7 +1548,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                                                   width: 20,
                                                                 ),
                                                                 Text(
-                                                                  "4.5km",
+                                                                  "4.8km",
                                                                   style: GoogleFonts.poppins(
                                                                       fontSize:
                                                                           23,
@@ -1752,7 +1767,9 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                                             ),
                                           ),
                                         ))
-                                    : Container(),
+                                    : Container(
+                                      child: Text("nothng is here"),
+                                ),
                               ),
                             ),
                           ],
@@ -1760,6 +1777,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
                       ),
                     ))),
               ),
+              //ride data with start & end trip
               Positioned(
                   bottom: 0,
                   left: 0,
@@ -2337,7 +2355,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
     });
   }
 
-  Future<void> onData(LocationDto event) async {
+  Future<void> onGetLocData(LocationDto event) async {
     print('fdfdf');
 
     var dio = Dio();
@@ -2394,7 +2412,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
     if (locationSubscription != null) {
       locationSubscription.cancel();
     }
-    locationSubscription = locationStream.listen(onData);
+    locationSubscription = locationStream.listen(onGetLocData);
     await LocationManager().start();
     setState(() {});
   }
@@ -2420,10 +2438,14 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
       // Connect to websocket
       socket.connect();
       socket.onConnect(
-          (data) => {print("connectedDIDIDI:" + socket.connected.toString())});
-
+          (data) {
+            return {
+              print("connectedDIDIDI:" + socket.connected.toString())
+            };
+          });
+      //from user side
       socket.on('getBookingvent',
-          (data) => {print('lklkl===========$data'), onNewBooking(data)});
+          (data) => {print('response from showbkng=:$data'), onNewBooking(data)});
 
       socket.on('BookingAcceptResponse',
           (data) => {print("Call1111111113:"), onHideBooking(data)});
@@ -2506,7 +2528,7 @@ class _DriverDashBoardState extends State<DriverDashBoard> {
     }
 
     var loc = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.low);
+        desiredAccuracy: geo.LocationAccuracy.best);
 
     final dcoordinates = new Coordinates(loc.latitude, loc.longitude);
     var daddresses =

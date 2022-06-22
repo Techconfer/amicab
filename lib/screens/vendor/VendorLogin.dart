@@ -218,7 +218,7 @@ class _VendorLoginState extends State<VendorLogin> {
                             final response = await service.postLogin({
                               "username": usernameEdit.value.text.toLowerCase(),
                               "password": passwordEdit.value.text,
-                              "type": "driver"
+                              "type": "transportor"
                             });
                             dissmissLoader(context);
                             if (response.isSuccessful) {
